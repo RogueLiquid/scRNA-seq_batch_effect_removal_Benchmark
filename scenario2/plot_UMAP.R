@@ -7,6 +7,7 @@ library(colorspace)
 library(RColorBrewer)
 library(Polychrome)  # if not installed, run: install.packages("Polychrome")
 library(scales)
+library(dplyr)
 
 # === Step 1: Load UMAP data
 umap_files <- c(
@@ -17,6 +18,15 @@ umap_files <- c(
   harmony   = "umap_harmony.rds"
 )
 dfs <- lapply(umap_files, read_rds)
+
+# === Step 2: Rename cell_type labels before setting factor levels
+for (i in seq_along(dfs)) {
+  dfs[[i]]$cell_type <- recode(
+    dfs[[i]]$cell_type,
+    "Type 1" = "Alveolar Type 1",
+    "Type 2" = "Alveolar Type 2"
+  )
+}
 
 # Step 3: Build palettes based on ORDER, not label content
 all_celltypes <- sort(Reduce(intersect, lapply(dfs, \(d) unique(na.omit(d$cell_type)))))
@@ -34,8 +44,31 @@ dimplot_hue_palette <- function(values) {
   setNames(pal, values)
 }
 
-celltype_cols <- dimplot_hue_palette(all_celltypes)
+# Combine all datasets
+all_df <- bind_rows(dfs)
+
+# Count frequencies and find 3 rarest cell types
+celltype_counts <- all_df %>%
+  filter(!is.na(cell_type)) %>%
+  count(cell_type, sort = TRUE)
+
+least_three_types <- tail(celltype_counts$cell_type, 3)
+
+manual_colors <- c(
+  "Ionocytes" = "black",
+  "Lymphatic" = "yellow2",
+  "Alveolar Type 1" = "grey"
+)
+
+# Ensure palette has all levels
+celltype_cols <- celltype_cols[all_celltypes]
+all_celltypes <- sort(Reduce(intersect, lapply(dfs, \(d) unique(na.omit(d$cell_type)))))
+common_celltypes <- setdiff(all_celltypes, least_three_types)
+
+# Generate base palette for common types only
+celltype_cols <- dimplot_hue_palette(common_celltypes)
 batch_cols    <- dimplot_hue_palette(all_batches)
+celltype_cols <- c(celltype_cols, manual_colors)
 
 # === Step 4: Compute axis ranges with padding
 expand_range <- function(r, factor = 0.02) {

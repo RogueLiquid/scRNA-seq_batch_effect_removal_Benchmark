@@ -18,6 +18,14 @@ umap_files <- c(
 )
 dfs <- lapply(umap_files, read_rds)
 
+# === Step 2: Rename cell_type labels before setting factor levels
+for (i in seq_along(dfs)) {
+  dfs[[i]]$cell_type <- recode(
+    dfs[[i]]$cell_type,
+    "Type 2" = "Alveolar Type 2"
+  )
+}
+
 # Step 3: Build palettes based on ORDER, not label content
 all_celltypes <- sort(Reduce(intersect, lapply(dfs, \(d) unique(na.omit(d$cell_type)))))
 all_batches   <- sort(Reduce(intersect, lapply(dfs, \(d) unique(na.omit(d$batch)))))
