@@ -1,0 +1,6 @@
+Method,mean_iLISI,mean_cLISI,ASW_celltype,ASW_batch,kNN_batch_mix,PCR_R2,Isolated_Label,NMI,ARI
+Raw (Unintegrated),1.536,1.12,0.189,0.015,0.227,0.227,0.929,0.714,0.479
+Seurat Integrated,3.871,1.61,0.081,-0.092,0.761,0.021,0.693,0.596,0.371
+fastMNN Integrated,2.478,1.274,0.169,-0.056,0.565,0.151,0.836,0.72,0.522
+Harmony Integrated,3.164,1.379,0.164,-0.09,0.67,0.049,0.783,0.701,0.528
+scVI Integrated,2.804,1.396,0.076,-0.045,0.573,0.033,0.806,0.705,0.53
