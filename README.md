@@ -76,14 +76,6 @@ Metrics used in this study:
 
 ---
 
-## 📜 Citation
-
-Original dataset:  
-**Theis Lab (2021). Benchmarking atlas-level data integration in single-cell genomics.**  
-🔗 [DOI: 10.6084/m9.figshare.12420968](https://doi.org/10.6084/m9.figshare.12420968)
-
----
-
 ## 🛠 Dependencies
 
 ### R
@@ -106,6 +98,8 @@ Original dataset:
 
 ---
 
-## 📬 Contact
+## 📜 Citation
 
-If you encounter issues reproducing the results or have questions about the pipeline, please open an issue or contact the repository maintainer.
+Original dataset:  
+**Theis Lab (2021). Benchmarking atlas-level data integration in single-cell genomics.**  
+🔗 [DOI: 10.6084/m9.figshare.12420968](https://doi.org/10.6084/m9.figshare.12420968)
