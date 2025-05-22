@@ -38,7 +38,7 @@ seurat_obj <- NormalizeData(seurat_obj)
 seurat_obj <- ScaleData(seurat_obj)
 seurat_obj <- RunPCA(seurat_obj, npcs = 30, reduction.name = "pca_before")
 seurat_obj <- RunUMAP(seurat_obj, dims = 1:30, reduction = "pca_before",
-                      reduction.name = "umap_before")
+                      reduction.name = "umap_before", min.dist = 0.6)
 
 # graph clustering (same resolution for raw & integrated)
 seurat_obj <- FindNeighbors(seurat_obj, reduction = "pca_before", dims = 1:30)
@@ -75,7 +75,7 @@ rm(anchors); gc()
 DefaultAssay(seurat_integrated) <- "integrated"
 seurat_integrated <- ScaleData(seurat_integrated)
 seurat_integrated <- RunPCA(seurat_integrated, npcs = 30)
-seurat_integrated <- RunUMAP(seurat_integrated, dims = 1:30)
+seurat_integrated <- RunUMAP(seurat_integrated, dims = 1:30, min.dist = 0.6)
 seurat_integrated <- FindNeighbors(seurat_integrated, dims = 1:30)
 seurat_integrated <- FindClusters(seurat_integrated, resolution = 0.05)
 

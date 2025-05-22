@@ -70,28 +70,53 @@ celltype_cols <- dimplot_hue_palette(common_celltypes)
 batch_cols    <- dimplot_hue_palette(all_batches)
 celltype_cols <- c(celltype_cols, manual_colors)
 
-# === Step 4: Compute axis ranges with padding
-expand_range <- function(r, factor = 0.02) {
-  center <- mean(r)
-  span <- diff(r) * (1 + factor)
-  c(center - span / 2, center + span / 2)
+# === Step 4: Plotting helpers for square layout
+expand_equal_range <- function(x, y, pad = 0.02) {
+  x_span <- diff(range(x, na.rm = TRUE))
+  y_span <- diff(range(y, na.rm = TRUE))
+  max_span <- max(x_span, y_span) * (1 + pad)
+  
+  x_center <- mean(range(x, na.rm = TRUE))
+  y_center <- mean(range(y, na.rm = TRUE))
+  
+  list(
+    x = c(x_center - max_span / 2, x_center + max_span / 2),
+    y = c(y_center - max_span / 2, y_center + max_span / 2)
+  )
 }
-all_coords <- do.call(rbind, dfs)
-x_limits <- expand_range(range(all_coords$UMAP_1), 0.02)
-y_limits <- expand_range(range(all_coords$UMAP_2), 0.02)
 
 # === Step 5: General plotting function
 plot_umap <- function(df, colour_col, title, palette) {
+  lims <- expand_equal_range(df$UMAP_1, df$UMAP_2)
   ggplot(df, aes(UMAP_1, UMAP_2, colour = .data[[colour_col]])) +
     geom_point(size = 0.6, alpha = 0.85) +
-    coord_equal() +
-    xlim(x_limits) + ylim(y_limits) +
+    coord_fixed(xlim = lims$x, ylim = lims$y) +
     theme_void(base_size = 14) +
     scale_colour_manual(
       values = palette,
       guide  = guide_legend(override.aes = list(size = 4), ncol = 2)
     ) +
     labs(title = title, colour = colour_col) +
+    theme(
+      plot.title     = element_text(hjust = 0.5, size = 18, face = "bold"),
+      legend.title   = element_text(size = 14),
+      legend.text    = element_text(size = 12),
+      legend.key.size = unit(0.7, "cm"),
+      panel.border   = element_rect(colour = "grey70", linetype = "dashed", linewidth = 0.5, fill = NA)
+    )
+}
+
+plot_umap_batch <- function(df, title, palette) {
+  lims <- expand_equal_range(df$UMAP_1, df$UMAP_2)
+  ggplot(df, aes(UMAP_1, UMAP_2, colour = batch)) +
+    geom_point(size = 0.6, alpha = 0.85) +
+    coord_fixed(xlim = lims$x, ylim = lims$y) +
+    theme_void(base_size = 14) +
+    scale_colour_manual(
+      values = palette,
+      guide  = guide_legend(override.aes = list(size = 4), ncol = 1)
+    ) +
+    labs(title = title, colour = "batch") +
     theme(
       plot.title     = element_text(hjust = 0.5, size = 18, face = "bold"),
       legend.title   = element_text(size = 14),
@@ -117,30 +142,10 @@ fig_type <- wrap_plots(plots_type, ncol = 3) +
     plot.margin = margin(2, 2, 2, 2)
   )
 
-ggsave("UMAP_all_celltype.png", fig_type, width = 16, height = 10, dpi = 300)
+ggsave("UMAP_all_celltype.png", fig_type, width = 16, height = 9, dpi = 300)
 print(fig_type)
 
 # === Step 7: Create batch plots
-plot_umap_batch <- function(df, title, palette) {
-  ggplot(df, aes(UMAP_1, UMAP_2, colour = batch)) +
-    geom_point(size = 0.6, alpha = 0.85) +
-    coord_equal() +
-    xlim(x_limits) + ylim(y_limits) +
-    theme_void(base_size = 14) +
-    scale_colour_manual(
-      values = palette,
-      guide  = guide_legend(override.aes = list(size = 4), ncol = 1)
-    ) +
-    labs(title = title, colour = "batch") +
-    theme(
-      plot.title     = element_text(hjust = 0.5, size = 18, face = "bold"),
-      legend.title   = element_text(size = 14),
-      legend.text    = element_text(size = 12),
-      legend.key.size = unit(0.7, "cm"),
-      panel.border   = element_rect(colour = "grey70", linetype = "dashed", linewidth = 0.5, fill = NA)
-    )
-}
-
 plots_batch <- list(
   plot_umap_batch(dfs$raw,     "Raw",     batch_cols),
   plot_umap_batch(dfs$seurat,  "Seurat",  batch_cols),
@@ -156,5 +161,5 @@ fig_batch <- wrap_plots(plots_batch, ncol = 3) +
     plot.margin = margin(2, 2, 2, 2)
   )
 
-ggsave("UMAP_all_batch.png", fig_batch, width = 13, height = 10, dpi = 300)
+ggsave("UMAP_all_batch.png", fig_batch, width = 13, height = 9, dpi = 300)
 print(fig_batch)

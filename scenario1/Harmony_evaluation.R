@@ -42,7 +42,7 @@ seurat <- RunHarmony(
 )
 
 # ---------- 4. UMAP / clustering on Harmony space ---------------------------
-seurat <- RunUMAP(seurat, reduction = "harmony", dims = 1:30, reduction.name = "umap_harmony")
+seurat <- RunUMAP(seurat, reduction = "harmony", dims = 1:30, reduction.name = "umap_harmony", min.dist = 0.6)
 seurat <- FindNeighbors(seurat, reduction = "harmony", dims = 1:30)
 seurat <- FindClusters(seurat, resolution = 0.5)
 

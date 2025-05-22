@@ -130,7 +130,8 @@ if (! any(grepl("umap", Reductions(seurat_scvi), ignore.case = TRUE))) {
     reduction      = "X_scVI",
     dims           = 1:30,
     reduction.name = "umap_scvi",   # give it a clear name
-    reduction.key  = "umap_scvi_"
+    reduction.key  = "umap_scvi_",
+    min.dist = 0.6
   )
 } else {
   message("UMAP reduction already present: ",

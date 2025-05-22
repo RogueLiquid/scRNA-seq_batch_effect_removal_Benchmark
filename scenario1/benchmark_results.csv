@@ -1,6 +1,6 @@
-"Method","mean_iLISI","mean_cLISI","ASW_celltype","ASW_batch","kNN_batch_mix","PCR_R2","Isolated_Label","NMI","ARI"
-"fastMNN Integrated",1.474,1.254,0.187,0.047,0.317,0.027,0.828,0.702,0.442
-"Harmony Integrated",1.732,1.417,0.204,0.03,0.391,0.015,0.77,0.703,0.439
-"scVI Integrated",1.784,1.546,0.054,-0.045,0.396,0.006,0.73,0.684,0.41
-"Raw (Unintegrated)",1.066,1.065,0.318,0.139,0.04,0.059,0.957,0.857,0.745
-"Seurat Integrated",1.726,1.448,0.149,0.01,0.407,0.012,0.747,0.769,0.504
+Method,mean_iLISI,mean_cLISI,ASW_celltype,ASW_batch,kNN_batch_mix,PCR_R2,Isolated_Label,NMI,ARI
+fastMNN Integrated,1.474,1.254,0.187,0.047,0.317,0.027,0.828,0.702,0.442
+Harmony Integrated,1.732,1.417,0.204,0.03,0.391,0.015,0.77,0.703,0.439
+scVI Integrated,1.784,1.546,0.054,-0.045,0.396,0.006,0.73,0.684,0.41
+Raw (Unintegrated),1.066,1.065,0.318,0.139,0.04,0.059,0.957,0.857,0.745
+Seurat Integrated,1.726,1.448,0.149,0.01,0.407,0.012,0.747,0.769,0.504
